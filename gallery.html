@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Project Gallery | Iron Plumbing Services</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      font-family: 'Roboto Condensed', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fefefe;
+      color: #222;
+    }
+    header {
+      background-color: #c76c00;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .gallery figure {
+      margin: 0;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .gallery figcaption {
+      text-align: center;
+      margin-top: 0.5rem;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #eee;
+      margin-top: 2rem;
+    }
+  
+#pipesCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #0e0e0e;
+}
+
+
+.gallery figcaption { color: yellow; } body { color: yellow; }</style>
+</head>
+<body>
+<canvas id="pipesCanvas"></canvas>
+<header style="background-color: #c76c00; color: yellow; text-align: center; padding: 1.5rem;">
+<h1>Project Gallery</h1>
+<p>Real jobs. Real grit. Built to last.</p>
+</header>
+<section class="gallery">
+<figure>
+<img alt="Drain in Insulation" src="insulation-drainwork.jpg"/>
+<figcaption>“Just a little PVC with a side of itchy regret.”</figcaption>
+</figure>
+<figure>
+<img alt="Wall of Boilers" src="boiler-wall-chaos.jpg"/>
+<figcaption>“It’s not spaghetti… it’s spaghetti code. For plumbing.”</figcaption>
+</figure>
+<figure>
+<img alt="Underground Pipes" src="underground-squid-pipes.jpg"/>
+<figcaption>“Not saying it’s an alien nest… but maybe.”</figcaption>
+</figure>
+<figure>
+<img alt="Pipe Nightmare" src="pipe-nightmare.jpg"/>
+<figcaption>“New fear unlocked.”</figcaption>
+</figure>
+<figure>
+<img alt="Laundry Tangle" src="laundry-tangle.jpg"/>
+<figcaption>“Red is hot. Blue is cold. Black is… creative.”</figcaption>
+</figure>
+<figure>
+<img alt="Trench Work" src="trench-boss.jpg"/>
+<figcaption>“One man. One trench. One dream.”</figcaption>
+</figure>
+</section>
+<footer>
+    © 2025 Iron Plumbing Services — Built to Last.
+  </footer>
+<script>
+  const canvas = document.getElementById("pipesCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const pipes = [];
+  const colors = ["#00ffff", "#ff4500", "#00ff00", "#ffa500"];
+  const directions = [[1,0], [0,1], [-1,0], [0,-1]];
+
+  function Pipe(x, y, dir, color) {
+    this.x = x;
+    this.y = y;
+    this.dir = dir;
+    this.color = color;
+    this.length = 0;
+  }
+
+  Pipe.prototype.update = function() {
+    this.length++;
+    if (this.length > 20) {
+      const newDir = directions[Math.floor(Math.random() * directions.length)];
+      pipes.push(new Pipe(this.x, this.y, newDir, this.color));
+      return false;
+    }
+    this.x += this.dir[0] * 10;
+    this.y += this.dir[1] * 10;
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    ctx.lineTo(this.x + this.dir[0] * 10, this.y + this.dir[1] * 10);
+    ctx.stroke();
+    return true;
+  }
+
+  function animate() {
+    if (pipes.length < 50) {
+      pipes.push(new Pipe(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height,
+        directions[Math.floor(Math.random() * directions.length)],
+        colors[Math.floor(Math.random() * colors.length)]
+      ));
+    }
+    for (let i = pipes.length - 1; i >= 0; i--) {
+      if (!pipes[i].update()) pipes.splice(i, 1);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+</body>
+</html>
